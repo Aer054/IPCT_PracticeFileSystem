@@ -24,7 +24,7 @@ const swaggerOptions = {
         },
       ],
     },
-    apis: ['./routes/index.js', './routes/authRouter.js'], 
+    apis: ['./routes/index.js', './routes/authRouter.js','./routes/fileRouter.js','./routes/folderRouter.js'], 
   };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
