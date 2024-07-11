@@ -30,7 +30,7 @@ const upload = multer({ storage: storage });
 
 /**
  * @swagger
- * /api/file/{id}:
+ * /api/file/file/{id}:
  *   delete:
  *     summary: Delete file by ID
  *     tags: [Files]
@@ -48,13 +48,16 @@ const upload = multer({ storage: storage });
  *         description: Successfully deleted file
  *       '401':
  *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
  *       '404':
  *         description: File not found
  */
-router.delete('/file/:id',fileController.deleteFile);
+router.delete('/file/:id', fileController.deleteFile);
+
 /**
  * @swagger
- * /api/file:
+ * /api/file/file:
  *   post:
  *     summary: Upload a file
  *     tags: [Files]
@@ -84,7 +87,9 @@ router.delete('/file/:id',fileController.deleteFile);
  *         description: Bad request
  *       '401':
  *         description: Unauthorized
+ *       '404':
+ *         description: Folder not found or insufficient permissions
  */
-router.post('/file',upload.single('file'),fileController.uploadFile);
+router.post('/file', upload.single('file'), fileController.uploadFile);
 
 module.exports = router;
