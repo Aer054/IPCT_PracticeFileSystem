@@ -1,17 +1,18 @@
 const ApiError=require("../error/ApiError")
 const bcrypt = require('bcrypt')
-const {User}=require('../models/user')
+const User=require('../models/user')
+const Folder=require('../models/folder')
 const jwt=require('jsonwebtoken')
 
-const generateJWT = (username) => {
+const generateJWT = (username,id) => {
     const accessToken = jwt.sign(
-        { username },
+        { username,id },
         process.env.SECRET_KEY,
-        { expiresIn: '15m', algorithm: 'HS256' }
+        { expiresIn: '60m', algorithm: 'HS256' }
     );
     
     const refreshToken = jwt.sign(
-        { username },
+        { username,id },
         process.env.REFRESH_SECRET_KEY,
         { expiresIn: '7d', algorithm: 'HS256' }
     );
@@ -38,8 +39,8 @@ class UserController{
           username,
           password: hashPassword
         });
-    
-        const tokens = generateJWT(user.username, user.email)
+        await Folder.create({ name: 'root', userId: user.id });
+        const tokens = generateJWT(user.username, user.id)
     
         return res.json({ tokens });
     
@@ -47,7 +48,7 @@ class UserController{
         if (error.name === 'SequelizeValidationError') {
             return next(ApiError.badRequest(error.errors.map(e => e.message).join('. ')));
         }
-        return next(ApiError.internal('Ошибка регистрации'));
+        return next(ApiError.internal(error.message));
     }
     }
 
@@ -61,12 +62,12 @@ class UserController{
         if(!comparePaswword){
             return next(ApiError.internal('Указан не верный пароль'))
         }
-        const tokens =generateJWT(user.username)
+        const tokens =generateJWT(user.username,user.id)
         return res.json({ tokens });
     }
 
     async check(req,res){
-        const tokens = generateJWT(req.user.username)
+        const tokens = generateJWT(req.user.username,req.user.id)
         return res.json({ tokens });
     }
     

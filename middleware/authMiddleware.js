@@ -48,13 +48,13 @@ module.exports = async function (req, res, next) {
 
         // генерируем новый access токен
         const newAccessToken = jwt.sign(
-            { username: user.username, email: user.email },
+            { username: user.username,id:user.id},
             process.env.SECRET_KEY,
             { expiresIn: '15m', algorithm: 'HS256' }
         );
 
         res.setHeader('Authorization', `Bearer ${newAccessToken}`);
-        req.user = { username: user.username, email: user.email }; // сохраняем данные пользователя в запрос для дальнейшего использования
+        req.user = { username: user.username,id:user.id}; // сохраняем данные пользователя в запрос для дальнейшего использования
 
         next();
     } catch (err) {

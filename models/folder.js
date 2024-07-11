@@ -3,6 +3,12 @@ const sequelize = require('../db');
 const User = require('./user');
 
 const Folder = sequelize.define('Folder', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
