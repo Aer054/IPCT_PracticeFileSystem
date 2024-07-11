@@ -39,6 +39,9 @@ async function deleteFolderRecursively(folderId, userId) {
 class FolderController{
     async createFolder(req, res,next) {
         const { name, parentId } = req.body;
+        if(!name||!parentId){
+            return next(ApiError.internal("Не указано name или parentId"))
+        }
         try{
             const folder = await Folder.create({
                 name,
@@ -117,7 +120,7 @@ class FolderController{
 
     try {
         const folder = await Folder.findByPk(id);
-        if (!folder || folder.userId !== req.user.userId) {
+        if (!folder || folder.userId !== req.user.id) {
             return next(ApiError.forbidden('Forbidden'));
         }
         if (folder.parentId === null) {
