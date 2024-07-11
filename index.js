@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 require('dotenv').config()
 
 const PORT =process.env.PORT || 5000
@@ -28,7 +29,8 @@ const swaggerOptions = {
   };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-  
+app.use(cors());
+app.options('*', cors()); 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json());
 app.use('/api',router)
